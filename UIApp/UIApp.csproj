@@ -26,13 +26,13 @@
 		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 
 		<!-- Display name -->
-		<ApplicationTitle>UIApp</ApplicationTitle>
+		<ApplicationTitle>My QR Scanner</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.uiapp</ApplicationId>
+		<ApplicationId>com.MySolutions.QRScanner</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>0.1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
