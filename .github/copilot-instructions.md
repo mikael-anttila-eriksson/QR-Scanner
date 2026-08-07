@@ -77,6 +77,12 @@ settled unless an explicit ADR or an approved change updates them.
 ## Testing (non-default guidance)
 - no set.
 
+## Commit messages (authoritative)
+Commit message guidance is maintained in `.github/commit-message-instructions.md`.
+Copilot and contributors should follow that file when generating or suggesting
+commit messages (Conventional Commits). Use that file as the single source of
+truth; do not duplicate detailed commit-format rules here.
+
 ## Pointers (authoritative locations)
 - System architecture: `.github/docs/architecture.md`
 - Current work / active decisions: `.github/docs/project-context.md`
