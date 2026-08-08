@@ -6,3 +6,6 @@ About: This is table of contents
 | ADR | Title | Status |
 |-----|-------|--------|
 | ADR-001 | Defer AGENTS.md in Favor of copilot-instructions.md | Accepted |
+
+## Reference
+To see information about the ADR-process see `.github/docs/reference/adr-reference.md`

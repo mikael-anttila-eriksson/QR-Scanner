@@ -1,3 +1,9 @@
+---
+description: ADR process reference
+document_type: reference
+authoritative: true
+---
+
 # ADR Process — Reference
 
 Not loaded by any agent at runtime. Explains how the ADR system in this repo

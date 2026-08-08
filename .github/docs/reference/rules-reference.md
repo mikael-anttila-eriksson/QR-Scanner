@@ -1,3 +1,9 @@
+---
+description: Rules file authoring reference
+document_type: reference
+authoritative: true
+---
+
 # Rules File — Authoring Reference
 
 ## Purpose
