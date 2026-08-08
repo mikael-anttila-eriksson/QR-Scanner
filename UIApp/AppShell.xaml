@@ -3,12 +3,21 @@
     x:Class="UIApp.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:UIApp"
+    xmlns:local="clr-namespace:UIApp.Views"
     Title="UIApp">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <ShellContent
+            Title="Scan"
+            Icon="icon_scan.png"
+            ContentTemplate="{DataTemplate local:ScannerPage}"
+            Route="scanner" />
+
+        <ShellContent
+            Title="History"
+            Icon="icon_history.png"
+            ContentTemplate="{DataTemplate local:HistoryPage}"
+            Route="history" />
+    </TabBar>
 
 </Shell>
