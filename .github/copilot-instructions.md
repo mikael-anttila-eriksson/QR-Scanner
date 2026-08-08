@@ -7,19 +7,21 @@ work-in-progress guidance belongs in `.github/docs/project-context.md`.
 
 ## Commands (exact, copy-pasteable)
 - Build (solution):
-  - `dotnet build MAUI_ShoppingList.slnx`
-  - `dotnet build ShoppingListApp/ShoppingListApp.csproj`
+  - `dotnet build QRScanner.slnx`
+  - `dotnet build UIApp\UIApp.csproj`
 - Build for platform (examples):
-  - `dotnet build ShoppingListApp/ShoppingListApp.csproj -f net10.0-android`
-  - `dotnet build ShoppingListApp/ShoppingListApp.csproj -f net10.0-windows10.0.19041.0`
-- Run (Android):
-  - `dotnet run -p ShoppingListApp/ShoppingListApp.csproj -f net10.0-android`
+  - `dotnet build UIApp\UIApp.csproj -f net10.0-android`
+  - `dotnet build UIApp\UIApp.csproj -f net10.0-windows10.0.19041.0`
+- Run (Android emulator):
+  - `dotnet run -p UIApp\UIApp.csproj -f net10.0-android`
+- Run (Windows):
+  - `dotnet run -p UIApp\UIApp.csproj -f net10.0-windows10.0.19041.0`
 - Watch (rebuild on changes):
-  - `dotnet watch -p ShoppingListApp/ShoppingListApp.csproj run -f net10.0-android`
+  - `dotnet watch -p UIApp\UIApp.csproj run -f net10.0-android`
 - Clean:
-  - `dotnet clean ShoppingListApp/ShoppingListApp.csproj`
-- Tests (test project uses shared-source inclusion):
-  - `dotnet test tests/ShoppingListApp.Tests/ShoppingListApp.Tests.csproj`
+  - `dotnet clean UIApp\UIApp.csproj`
+- Tests:
+  - No test projects are configured in this repository. Run `dotnet test <test-project.csproj>` once you add a test project.
 
 Only include commands here that require project-specific flags or paths.
 
