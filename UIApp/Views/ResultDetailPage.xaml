@@ -2,10 +2,88 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="UIApp.Views.ResultDetailPage"
-             Title="Result">
-    <ContentPage.Content>
-        <Grid Padding="16">
-            <Label Text="Result detail (MVP skeleton)" HorizontalOptions="Center" VerticalOptions="Center" />
-        </Grid>
-    </ContentPage.Content>
+             x:DataType="UIApp.ViewModels.ResultDetailViewModel"
+             Title="Scan Result"
+             BackgroundColor="#1e1e1e">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="16">
+        
+        <!-- Type Badge -->
+        <Border Grid.Row="0" 
+                Stroke="#00ff00" 
+                StrokeThickness="1"
+                Padding="12,8"
+                HorizontalOptions="Start">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="6" />
+            </Border.StrokeShape>
+            <Label Text="{Binding CurrentResult.Type, StringFormat='{0}'}" 
+                   TextColor="#00ff00"
+                   FontSize="12"
+                   FontAttributes="Bold" />
+        </Border>
+
+        <!-- Content Display -->
+        <ScrollView Grid.Row="1">
+            <StackLayout Spacing="16">
+                <!-- Raw Value -->
+                <Label Text="Content:" 
+                       TextColor="#cccccc" 
+                       FontSize="12"
+                       FontAttributes="Bold" />
+                
+                <Label Text="{Binding CurrentResult.RawValue}"
+                       TextColor="#ffffff"
+                       FontSize="16"
+                       LineBreakMode="WordWrap" />
+
+                <!-- Metadata -->
+                <StackLayout Spacing="8">
+                    <Label Text="Scanned:" 
+                           TextColor="#999999" 
+                           FontSize="11" />
+                    
+                    <Label Text="{Binding CurrentResult.ScannedAt, StringFormat='{0:g}'}" 
+                           TextColor="#cccccc" 
+                           FontSize="12" />
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Action Buttons -->
+        <StackLayout Grid.Row="2" Spacing="8">
+            <!-- Open Button (URL only) -->
+            <Button x:Name="OpenButton"
+                    Text="📱 Open"
+                    Command="{Binding OpenUrlCommand}"
+                    BackgroundColor="#2196F3"
+                    TextColor="#ffffff"
+                    FontSize="14"
+                    Padding="12,8"
+                    CornerRadius="6" />
+
+            <!-- Copy and Share Row -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Grid.Column="0"
+                        Text="📋 Copy"
+                        Command="{Binding CopyToClipboardCommand}"
+                        BackgroundColor="#4CAF50"
+                        TextColor="#ffffff"
+                        FontSize="14"
+                        Padding="12,8"
+                        CornerRadius="6" />
+
+                <Button Grid.Column="1"
+                        Text="↗️ Share"
+                        Command="{Binding ShareResultCommand}"
+                        BackgroundColor="#FF9800"
+                        TextColor="#ffffff"
+                        FontSize="14"
+                        Padding="12,8"
+                        CornerRadius="6" />
+            </Grid>
+        </StackLayout>
+
+    </Grid>
+
 </ContentPage>
