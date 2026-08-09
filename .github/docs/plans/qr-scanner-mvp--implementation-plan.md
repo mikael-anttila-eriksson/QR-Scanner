@@ -19,8 +19,8 @@ Implement the MVP portion of the QR Scanner app spec (see .github/docs/plans/qr-
 - UIApp\Views\HistoryPage.xaml(.cs) — CollectionView, swipe-to-delete, tap-to-open
 - UIApp\ViewModels\ScannerViewModel.cs, ResultDetailViewModel.cs, HistoryViewModel.cs — MVVM wiring, commands
 - UIApp\Models\ScanResult.cs — SQLite model (PrimaryKey, RawValue, Type, ScannedAt, IsFavorite)
-- UIApp\Services\IStorageService / SqliteStorageService.cs — persist ScanResult objects
-- UIApp\Services\IScannerService / ScannerService.cs — ZXing integration and debounce
+- UIApp\Services\SqliteStorageService.cs — persist ScanResult objects (no IStorageService interface; implement concrete service directly)
+- UIApp\Services\ScannerService.cs — ZXing integration and debounce (no IScannerService interface; implement concrete service directly)
 - UIApp\Resources\Styles\Colors.xaml & Styles.xaml — ensure dark-only palette and set Application.UserAppTheme
 - Platforms\Android\AndroidManifest.xml — CAMERA permission entry
 
@@ -69,6 +69,7 @@ Implement the MVP portion of the QR Scanner app spec (see .github/docs/plans/qr-
 - Keep UI minimal and single-purpose per screen as spec instructs.
 - Include IsFavorite column now with default false to avoid Phase 2 migration.
 - No torch/gallery/generator/settings in MVP; reserve them for Phase 2.
+- No interfaces; implement concrete services directly.
 
 ## MVP Acceptance Checklist
 see section "MVP Acceptance Criteria" in `.github\docs\plans\qr-scanner-app-spec-mvp-phase2.md`
@@ -76,6 +77,7 @@ see section "MVP Acceptance Criteria" in `.github\docs\plans\qr-scanner-app-spec
 ## Required NuGet packages
 - ZXing.Net.MAUI
 - sqlite-net-pcl
+- SQLitePCLRaw.bundle_green — native SQLite binary bundle required by `sqlite-net-pcl`; remember to call `SQLitePCL.Batteries_V2.Init()` in `MauiProgram.cs` before any DB access.
 - CommunityToolkit.Mvvm
 - Microsoft.Extensions.Logging (already referenced)
 - Microsoft.Maui.Essentials (for Launcher, Clipboard, Share — verify runtime APIs)
