@@ -32,3 +32,21 @@ Notes
 - Keep the persistence wiring in `MauiProgram.cs` and register the storage service in DI so it's initialized consistently across app startup.
 
 See also: `.backup/about-splite-package.md` (archived)
+
+## Navigation / UI Alerts
+
+Decision: All user-facing alerts use `Shell.Current.DisplayAlertAsync(...)`.
+Never `Application.Current.MainPage.DisplayAlert(...)`.
+
+Why
+
+`Application.MainPage` was obsoleted in .NET MAUI 9 as part of the
+framework's move to multi-window support (Window.Page replaces the old
+single-page-per-app assumption — see Microsoft's MAUI 9 release notes).
+Since the app is Shell-based (Shell > TabBar > ShellContent), `Shell.Current`
+is always available once the app starts, requires no null-forgiving
+operators, and needs no Window-index lookup.
+
+No IAlertService/IDialogService abstraction for MVP — revisit only if
+ViewModel unit testing requires mocking alerts, or call sites grow beyond
+simple error messages.

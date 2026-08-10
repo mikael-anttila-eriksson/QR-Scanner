@@ -35,7 +35,7 @@ namespace UIApp.ViewModels
             }
             catch (Exception ex)
             {
-                await Application.Current!.MainPage!.DisplayAlert("Error", $"Failed to load result: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", $"Failed to load result: {ex.Message}", "OK");
             }
         }
 
@@ -51,7 +51,7 @@ namespace UIApp.ViewModels
             }
             catch (Exception ex)
             {
-                await Application.Current!.MainPage!.DisplayAlert("Error", $"Could not open URL: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", $"Could not open URL: {ex.Message}", "OK");
             }
         }
 
@@ -64,11 +64,11 @@ namespace UIApp.ViewModels
             try
             {
                 await Clipboard.SetTextAsync(CurrentResult.RawValue);
-                await Application.Current!.MainPage!.DisplayAlert("", "Copied to clipboard", "OK");
+                await Shell.Current.DisplayAlertAsync("", "Copied to clipboard", "OK");
             }
             catch (Exception ex)
             {
-                await Application.Current!.MainPage!.DisplayAlert("Error", $"Could not copy: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", $"Could not copy: {ex.Message}", "OK");
             }
         }
 
@@ -88,7 +88,7 @@ namespace UIApp.ViewModels
             }
             catch (Exception ex)
             {
-                await Application.Current!.MainPage!.DisplayAlert("Error", $"Could not share: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", $"Could not share: {ex.Message}", "OK");
             }
         }
     }

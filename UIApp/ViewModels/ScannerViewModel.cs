@@ -56,7 +56,7 @@ namespace UIApp.ViewModels
                 IsOverlayVisible = true;
                 StatusMessage = "Camera permission denied. Open settings to enable camera.";
 
-                var open = await Application.Current!.MainPage!.DisplayAlert(
+                var open = await Shell.Current.DisplayAlertAsync(
                     "Camera Permission Required",
                     "The camera permission is required to scan QR codes.",
                     "Open Settings",
@@ -77,7 +77,7 @@ namespace UIApp.ViewModels
             }
             catch (Exception ex)
             {
-                await Application.Current!.MainPage!.DisplayAlert(
+                await Shell.Current.DisplayAlertAsync(
                     "Permission Error",
                     $"Failed to request camera permission: {ex.Message}",
                     "OK");
@@ -105,7 +105,7 @@ namespace UIApp.ViewModels
 
                 if (scanResult == null)
                 {
-                    await Application.Current!.MainPage!.DisplayAlert("", "Couldn't read QR code, try again.", "OK");
+                    await Shell.Current.DisplayAlertAsync("", "Couldn't read QR code, try again.", "OK");
                     return;
                 }
 
@@ -120,7 +120,7 @@ namespace UIApp.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = "Error scanning";
-                await Application.Current!.MainPage!.DisplayAlert("Error", ex.Message, "OK");
+                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
             }
         }
 

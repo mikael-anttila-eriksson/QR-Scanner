@@ -38,7 +38,7 @@ namespace UIApp.ViewModels
             }
             catch (Exception ex)
             {
-                await Application.Current!.MainPage!.DisplayAlert("Error", $"Failed to load history: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", $"Failed to load history: {ex.Message}", "OK");
             }
         }
 
@@ -53,7 +53,7 @@ namespace UIApp.ViewModels
             }
             catch (Exception ex)
             {
-                await Application.Current!.MainPage!.DisplayAlert("Error", $"Navigation failed: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", $"Navigation failed: {ex.Message}", "OK");
             }
         }
 
@@ -70,7 +70,7 @@ namespace UIApp.ViewModels
             }
             catch (Exception ex)
             {
-                await Application.Current!.MainPage!.DisplayAlert("Error", $"Could not delete: {ex.Message}", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", $"Could not delete: {ex.Message}", "OK");
             }
         }
     }

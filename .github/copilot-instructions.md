@@ -62,6 +62,8 @@ settled unless an explicit ADR or an approved change updates them.
 - NEVER use Frame for styled containers — use Border instead.
 - NEVER bypass the coalescing or concurrency guard in the JsonStorageService
   when writing files.
+- NEVER use `Application.Current.MainPage` (obsolete since .NET MAUI 9) —
+  use `Shell.Current.DisplayAlertAsync(...)` for all user-facing alerts.
 
 ## Copilot Review Behavior (how Copilot should respond)
 - Respect the Design Principles and Boundaries as settled decisions; do not
