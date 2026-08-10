@@ -7,5 +7,15 @@ namespace UIApp.Views
             InitializeComponent();
             BindingContext = vm;
         }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (BindingContext is ViewModels.HistoryViewModel vm)
+            {
+                await vm.LoadHistory();
+            }
+        }
     }
 }

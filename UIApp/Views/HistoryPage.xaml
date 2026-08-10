@@ -1,11 +1,58 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:UIApp.Models"
+             xmlns:conv="clr-namespace:UIApp.Converters"
              x:Class="UIApp.Views.HistoryPage"
+             x:Name="HistoryPage"
              Title="History">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:TimeAgoConverter x:Key="TimeAgoConverter" />
+            <conv:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
-        <Grid>
-            <Label Text="History (MVP skeleton)" HorizontalOptions="Center" VerticalOptions="Center" />
+        <Grid Padding="12">
+            <!-- Empty state -->            
+            <StackLayout IsVisible="{Binding IsEmpty}" HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="No scans yet" HorizontalOptions="Center" TextColor="#888" />
+                <Label Text="Open the Scanner tab to create new scans." HorizontalOptions="Center" TextColor="#666" FontSize="12" />
+            </StackLayout>
+
+            <!-- History list -->
+            <CollectionView ItemsSource="{Binding Items}" IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ScanResult">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Execute">
+                                    <SwipeItem Text="Delete" BackgroundColor="#e53935" Command="{Binding Source={x:Reference HistoryPage}, Path=BindingContext.DeleteCommand}" CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Grid Padding="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackLayout Grid.Column="0">
+                                    <Label Text="{Binding RawValue}" LineBreakMode="TailTruncation" TextColor="#fff" />
+                                </StackLayout>
+
+                                <Label Grid.Column="1" Text="{Binding ScannedAt, Converter={StaticResource TimeAgoConverter}}" TextColor="#aaa" HorizontalOptions="End" VerticalOptions="Center" />
+
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference HistoryPage}, Path=BindingContext.ItemSelectedCommand}" CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
