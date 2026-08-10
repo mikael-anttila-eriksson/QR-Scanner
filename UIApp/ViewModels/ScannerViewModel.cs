@@ -114,7 +114,7 @@ namespace UIApp.ViewModels
                 // Navigate to detail page
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
-                    await Shell.Current.GoToAsync($"resultdetail?id={scanResult.Id}");
+                    await Shell.Current.GoToAsync($"{AppShell.ResultDetailRoute}?id={scanResult.Id}");
                 });
             }
             catch (Exception ex)

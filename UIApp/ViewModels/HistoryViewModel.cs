@@ -49,7 +49,7 @@ namespace UIApp.ViewModels
 
             try
             {
-                await Shell.Current.GoToAsync($"resultdetail?id={item.Id}");
+                await Shell.Current.GoToAsync($"{AppShell.ResultDetailRoute}?id={item.Id}");
             }
             catch (Exception ex)
             {

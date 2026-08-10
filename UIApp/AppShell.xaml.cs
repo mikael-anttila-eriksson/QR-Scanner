@@ -4,11 +4,13 @@ namespace UIApp
 {
     public partial class AppShell : Shell
     {
+        public const string ResultDetailRoute = nameof(ResultDetailRoute);
+
         public AppShell()
         {
             InitializeComponent();
-            // Route for result detail page (navigates with GoToAsync("resultdetail?id=123"))
-            Routing.RegisterRoute("resultdetail", typeof(Views.ResultDetailPage));
+            // Route for result detail page (navigates with GoToAsync($"{ResultDetailRoute}?id=123"))
+            Routing.RegisterRoute(ResultDetailRoute, typeof(Views.ResultDetailPage));
         }
     }
 }
