@@ -1,7 +1,11 @@
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using UIApp.Models;
 using UIApp.Services;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Essentials;
+using Microsoft.Maui.Controls;
 
 namespace UIApp.ViewModels
 {
@@ -29,25 +33,45 @@ namespace UIApp.ViewModels
             {
                 var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
 
-                if (status != PermissionStatus.Granted)
+                if (status == PermissionStatus.Granted)
                 {
-                    status = await Permissions.RequestAsync<Permissions.Camera>();
+                    IsScanningEnabled = true;
+                    IsOverlayVisible = false;
+                    StatusMessage = "Align QR code in frame";
+                    return;
+                }
 
-                    if (status != PermissionStatus.Granted)
+                status = await Permissions.RequestAsync<Permissions.Camera>();
+
+                if (status == PermissionStatus.Granted)
+                {
+                    IsScanningEnabled = true;
+                    IsOverlayVisible = false;
+                    StatusMessage = "Align QR code in frame";
+                    return;
+                }
+
+                // Permission denied — show overlay and guidance
+                IsScanningEnabled = false;
+                IsOverlayVisible = true;
+                StatusMessage = "Camera permission denied. Open settings to enable camera.";
+
+                var open = await Application.Current!.MainPage!.DisplayAlert(
+                    "Camera Permission Required",
+                    "The camera permission is required to scan QR codes.",
+                    "Open Settings",
+                    "Cancel");
+
+                if (open)
+                {
+                    try
                     {
-                        var result = await Application.Current!.MainPage!.DisplayAlert(
-                            "Camera Permission Required",
-                            "The camera permission is required to scan QR codes. Please enable it in app settings.",
-                            "Open Settings",
-                            "Cancel");
-
-                        if (result)
-                        {
-                            // Navigate to app settings on Android
-#if ANDROID
-                            await Launcher.OpenAsync(new Uri("android://intent/#Intent;action=android.settings.APP_NOTIFICATION_SETTINGS;package=" + AppInfo.PackageName + ";end"));
-#endif
-                        }
+                        AppInfo.ShowSettingsUI();
+                    }
+                    catch
+                    {
+                        // Last resort: try Launcher with generic settings URI
+                        try { await Launcher.OpenAsync(new Uri("app-settings:")); } catch { }
                     }
                 }
             }
@@ -57,6 +81,19 @@ namespace UIApp.ViewModels
                     "Permission Error",
                     $"Failed to request camera permission: {ex.Message}",
                     "OK");
+            }
+        }
+
+        [RelayCommand]
+        public void OpenAppSettings()
+        {
+            try
+            {
+                AppInfo.ShowSettingsUI();
+            }
+            catch
+            {
+                // ignore
             }
         }
 

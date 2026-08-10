@@ -2,9 +2,10 @@
 <ContentPage 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:UIApp.ViewModels"
     xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
     x:Class="UIApp.Views.ScannerPage"
-    x:DataType="UIApp.ViewModels.ScannerViewModel"
+    x:DataType="vm:ScannerViewModel"
     Title="Scan"
     BackgroundColor="#1e1e1e">
 
@@ -25,6 +26,15 @@
                 Grid.Column="0"
                 BackgroundColor="#00000080"
                 IsVisible="{Binding IsOverlayVisible}" />
+
+            <!-- Permission overlay content -->
+            <Grid Grid.Row="0" Grid.Column="0" IsVisible="{Binding IsOverlayVisible}">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="24" BackgroundColor="#222222cc" Spacing="12" WidthRequest="300">
+                    <Label Text="Camera required" TextColor="#fff" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label Text="This app needs access to the camera to scan QR codes. Please grant camera permission in app settings." TextColor="#ddd" FontSize="13" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                    <Button Text="Open Settings" Command="{Binding OpenAppSettingsCommand}" BackgroundColor="#2196F3" TextColor="#fff" />
+                </StackLayout>
+            </Grid>
 
             <!-- Viewfinder rectangle (border only) -->
             <Border 
