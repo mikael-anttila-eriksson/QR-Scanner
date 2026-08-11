@@ -4,7 +4,7 @@
              xmlns:models="clr-namespace:UIApp.Models"
              xmlns:conv="clr-namespace:UIApp.Converters"
              x:Class="UIApp.Views.HistoryPage"
-             x:Name="HistoryPage"
+             x:Name="QRHistoryPage"
              Title="History">
 
     <ContentPage.Resources>
@@ -16,7 +16,8 @@
 
     <ContentPage.Content>
         <Grid Padding="12">
-            <!-- Empty state -->            
+            <!-- Empty state -->
+            
             <StackLayout IsVisible="{Binding IsEmpty}" HorizontalOptions="Center" VerticalOptions="Center">
                 <Label Text="No scans yet" HorizontalOptions="Center" TextColor="#888" />
                 <Label Text="Open the Scanner tab to create new scans." HorizontalOptions="Center" TextColor="#666" FontSize="12" />
@@ -29,7 +30,7 @@
                         <SwipeView>
                             <SwipeView.RightItems>
                                 <SwipeItems Mode="Execute">
-                                    <SwipeItem Text="Delete" BackgroundColor="#e53935" Command="{Binding Source={x:Reference HistoryPage}, Path=BindingContext.DeleteCommand}" CommandParameter="{Binding .}" />
+                                    <SwipeItem Text="Delete" BackgroundColor="#e53935" Command="{Binding Source={x:Reference QRHistoryPage}, Path=BindingContext.DeleteCommand}" CommandParameter="{Binding .}" />
                                 </SwipeItems>
                             </SwipeView.RightItems>
 
@@ -46,7 +47,7 @@
                                 <Label Grid.Column="1" Text="{Binding ScannedAt, Converter={StaticResource TimeAgoConverter}}" TextColor="#aaa" HorizontalOptions="End" VerticalOptions="Center" />
 
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={x:Reference HistoryPage}, Path=BindingContext.ItemSelectedCommand}" CommandParameter="{Binding .}" />
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference QRHistoryPage}, Path=BindingContext.ItemSelectedCommand}" CommandParameter="{Binding .}" />
                                 </Grid.GestureRecognizers>
                             </Grid>
                         </SwipeView>
