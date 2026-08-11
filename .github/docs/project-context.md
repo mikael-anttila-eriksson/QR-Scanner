@@ -57,6 +57,12 @@ Phase 2 planning and stabilization: manual QA and bug fixes from MVP verificatio
 ## Performance
 - Debounce set to 2000ms to prevent duplicate detections. Disable scanning when navigating away to reduce CPU/battery usage.
 
+## Testing Environment
+- **Target Platforms**: Windows and Android 14 (API level 34) on physical device.
+- **Rationale**: Single physical Android 14 device represents modern Android targets; Windows desktop testing allows cross-platform validation.
+- **Manual Testing**: All feature validation (scanner, gallery, torch, zoom, parsers, history, generator, settings) is performed on this matrix before Phase 2 acceptance.
+- **CI Testing**: Automated unit tests run on CI pipeline; device-specific tests (camera, permissions, storage) validated manually on target platforms.
+
 # Current Work
 
 ## In Progress / Stabilization
