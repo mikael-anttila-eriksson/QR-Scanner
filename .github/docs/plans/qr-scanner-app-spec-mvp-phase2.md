@@ -232,20 +232,21 @@ No additional back-stack manipulation or custom navigation handlers needed in MV
 
 ## 7. MVP Acceptance Criteria
 
-- [ ] App builds and runs on Android only
-- [ ] Shell navigation in place with Scanner and History as tabs, ResultDetail as a pushed route
-- [ ] Live camera scan detects a QR code, decodes it, applies debounce, and navigates to Result Detail
-- [ ] Result screen correctly distinguishes URL vs plain text and shows the right primary action
-- [ ] Copy and Share actions work from the Result Detail screen
-- [ ] Every successful scan is persisted to SQLite and appears in History, surviving app restart
-- [ ] History supports tap-to-reopen and swipe-to-delete
-- [ ] Empty history state is handled (not a blank screen)
-- [ ] Camera permission denial shows an explanation and a working link to system settings
-- [ ] Malformed/empty decode results do not create a history entry or crash the app
-- [ ] Entire UI renders in dark theme regardless of system theme setting
+- [x] App builds and runs on Android only
+- [x] Shell navigation in place with Scanner and History as tabs, ResultDetail as a pushed route
+- [x] Live camera scan detects a QR code, decodes it, applies debounce, and navigates to Result Detail
+- [x] Result screen correctly distinguishes URL vs plain text and shows the right primary action
+- [x] Copy and Share actions work from the Result Detail screen
+- [x] Every successful scan is persisted to SQLite and appears in History, surviving app restart
+- [x] History supports tap-to-reopen and swipe-to-delete
+- [x] Empty history state is handled (not a blank screen)
+- [x] Camera permission denial shows an explanation and a working link to system settings
+- [ ] Malformed/empty decode results do not create a history entry or crash the app *(deferred to Phase 2: requires malformed QR test vectors)*
+- [x] Entire UI renders in dark theme regardless of system theme setting
 
 ## 8. Phase 2 Acceptance Criteria
 
+- [ ] Malformed/empty decode results are validated and rejected (test vectors with corrupted/empty QR payloads)
 - [ ] Gallery image scanning successfully decodes an embedded QR code
 - [ ] Torch and pinch-to-zoom work during live scanning
 - [ ] WiFi, vCard, and calendar payloads each trigger their correct type-specific action
