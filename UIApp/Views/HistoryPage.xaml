@@ -16,6 +16,12 @@
 
     <ContentPage.Content>
         <Grid Padding="12">
+            <!-- Filter Row -->
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="8" Padding="0,0,0,8">
+                <Label Text="Favorites only" VerticalOptions="Center" TextColor="#ccc" />
+                <Switch IsToggled="{Binding ShowFavoritesOnly}" VerticalOptions="Center" />
+            </StackLayout>
+
             <!-- Empty state -->
             
             <StackLayout IsVisible="{Binding IsEmpty}" HorizontalOptions="Center" VerticalOptions="Center">
@@ -38,13 +44,17 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <StackLayout Grid.Column="0">
                                     <Label Text="{Binding RawValue}" LineBreakMode="TailTruncation" TextColor="#fff" />
                                 </StackLayout>
 
-                                <Label Grid.Column="1" Text="{Binding ScannedAt, Converter={StaticResource TimeAgoConverter}}" TextColor="#aaa" HorizontalOptions="End" VerticalOptions="Center" />
+                                <!-- Favorite star -->
+                                <Label Grid.Column="1" Text="★" TextColor="#FFD700" VerticalOptions="Center" IsVisible="{Binding IsFavorite}" Margin="8,0" />
+
+                                <Label Grid.Column="2" Text="{Binding ScannedAt, Converter={StaticResource TimeAgoConverter}}" TextColor="#aaa" HorizontalOptions="End" VerticalOptions="Center" />
 
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={x:Reference QRHistoryPage}, Path=BindingContext.ItemSelectedCommand}" CommandParameter="{Binding .}" />
