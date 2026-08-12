@@ -52,6 +52,13 @@ namespace UIApp.Services
             return list;
         }
 
+        public async Task ClearAllAsync()
+        {
+            if (_db == null) await InitializeAsync();
+            // Delete all records from ScanResults table
+            await _db!.ExecuteAsync("DELETE FROM ScanResults;");
+        }
+
         public async Task DeleteAsync(ScanResult item)
         {
             if (_db == null) await InitializeAsync();

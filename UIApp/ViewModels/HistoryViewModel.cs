@@ -104,5 +104,25 @@ namespace UIApp.ViewModels
                 await Shell.Current.DisplayAlertAsync("Error", $"Could not delete: {ex.Message}", "OK");
             }
         }
+
+        [RelayCommand]
+        public async Task ClearAll()
+        {
+            try
+            {
+                var confirm = await Shell.Current.DisplayAlertAsync("Clear history", "Delete all scan history? This cannot be undone.", "Delete", "Cancel");
+                if (!confirm) return;
+
+                await _storage.ClearAllAsync();
+                Items.Clear();
+                IsEmpty = true;
+
+                await Shell.Current.DisplayAlertAsync("History", "All scan history deleted.", "OK");
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlertAsync("Error", $"Failed to clear history: {ex.Message}", "OK");
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@
             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="8" Padding="0,0,0,8">
                 <Label Text="Favorites only" VerticalOptions="Center" TextColor="#ccc" />
                 <Switch IsToggled="{Binding ShowFavoritesOnly}" VerticalOptions="Center" />
+                <Button Text="Clear All" Command="{Binding ClearAllCommand}" BackgroundColor="#e53935" TextColor="#fff" HorizontalOptions="EndAndExpand" CornerRadius="6" />
             </StackLayout>
 
             <!-- Empty state -->
