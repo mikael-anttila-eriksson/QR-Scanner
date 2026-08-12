@@ -6,12 +6,14 @@ using UIApp.Services;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Essentials;
 using Microsoft.Maui.Controls;
+using ZXing.Net.Maui.Controls;
 
 namespace UIApp.ViewModels
 {
     public partial class ScannerViewModel : BaseViewModel
     {
         private readonly ScannerService _scannerService;
+        private CameraBarcodeReaderView? _cameraView;
 
         [ObservableProperty]
         public partial bool IsScanningEnabled { get; set; }
@@ -22,9 +24,28 @@ namespace UIApp.ViewModels
         [ObservableProperty]
         public partial string StatusMessage { get; set; } = "Align QR code in frame";
 
+        [ObservableProperty]
+        public partial bool IsTorchOn { get; set; } = false;
+
+        [ObservableProperty]
+        public partial bool IsTorchSupported { get; set; } = true;
+
+        [ObservableProperty]
+        public partial string TorchButtonText { get; set; } = "🔦 Off";
+
         public ScannerViewModel(ScannerService scannerService)
         {
             _scannerService = scannerService;
+        }
+
+        public void SetCameraView(CameraBarcodeReaderView? cameraView)
+        {
+            _cameraView = cameraView;
+            if (cameraView == null)
+            {
+                IsTorchOn = false;
+                UpdateTorchButtonText();
+            }
         }
 
         public async Task RequestCameraPermissionAsync()
@@ -95,6 +116,36 @@ namespace UIApp.ViewModels
             {
                 // ignore
             }
+        }
+
+        [RelayCommand]
+        public async Task ToggleTorch()
+        {
+            try
+            {
+                if (_cameraView == null)
+                    return;
+
+                // Toggle torch state
+                IsTorchOn = !IsTorchOn;
+                _cameraView.IsTorchOn = IsTorchOn;
+
+                UpdateTorchButtonText();
+                StatusMessage = IsTorchOn ? "Flash on" : "Flash off";
+            }
+            catch (Exception ex)
+            {
+                // Device may not support torch
+                IsTorchOn = false;
+                IsTorchSupported = false;
+                UpdateTorchButtonText();
+                StatusMessage = "Flash not supported on this device";
+            }
+        }
+
+        private void UpdateTorchButtonText()
+        {
+            TorchButtonText = IsTorchOn ? "💡 On" : "🔦 Off";
         }
 
         [RelayCommand]

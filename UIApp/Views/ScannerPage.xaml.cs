@@ -20,6 +20,8 @@ namespace UIApp.Views
         {
             base.OnAppearing();
             await _viewModel.RequestCameraPermissionAsync();
+            // Pass camera view reference to ViewModel for torch control
+            _viewModel.SetCameraView(CameraBarcodeReaderView);
         }
 
         protected override void OnDisappearing()
@@ -27,6 +29,7 @@ namespace UIApp.Views
             base.OnDisappearing();
             // Stop scanning and clean up to free camera resources
             CameraBarcodeReaderView.IsEnabled = false;
+            _viewModel.SetCameraView(null);
         }
 
         private void ConfigureBarcodeReader()

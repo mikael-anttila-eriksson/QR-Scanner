@@ -36,6 +36,23 @@
                 </StackLayout>
             </Grid>
 
+            <!-- Torch toggle button (top-right corner) -->
+            <Button 
+                Grid.Row="0"
+                Grid.Column="0"
+                Text="{Binding TorchButtonText}"
+                Command="{Binding ToggleTorchCommand}"
+                IsEnabled="{Binding IsTorchSupported}"
+                BackgroundColor="#FF8C00"
+                TextColor="#ffffff"
+                FontSize="16"
+                Padding="12,8"
+                CornerRadius="24"
+                BorderWidth="0"
+                VerticalOptions="Start"
+                HorizontalOptions="End"
+                Margin="0,16,16,0" />
+
             <!-- Viewfinder rectangle (border only) -->
             <Border 
                 Grid.Row="0"
