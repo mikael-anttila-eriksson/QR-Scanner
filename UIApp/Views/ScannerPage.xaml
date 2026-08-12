@@ -49,14 +49,30 @@
             </Border>
         </Grid>
 
-        <!-- Status text at bottom -->
-        <Label 
-            Grid.Row="1"
-            Text="{Binding StatusMessage}"
-            TextColor="#ffffff"
-            FontSize="14"
-            HorizontalTextAlignment="Center"
-            Padding="20,16"
-            BackgroundColor="#2a2a2a" />
+        <!-- Status text and Gallery button at bottom -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="0" BackgroundColor="#2a2a2a">
+            <Label 
+                Grid.Column="0"
+                Text="{Binding StatusMessage}"
+                TextColor="#ffffff"
+                FontSize="14"
+                HorizontalTextAlignment="Center"
+                Padding="20,16"
+                VerticalOptions="Center" />
+            
+            <!-- Gallery button -->
+            <Button 
+                Grid.Column="1"
+                Text="📷 Gallery"
+                Command="{Binding PickGalleryImageCommand}"
+                BackgroundColor="#2196F3"
+                TextColor="#ffffff"
+                FontSize="12"
+                Padding="12,16"
+                CornerRadius="0"
+                BorderWidth="0"
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="End" />
+        </Grid>
     </Grid>
 </ContentPage>

@@ -97,6 +97,57 @@ namespace UIApp.ViewModels
             }
         }
 
+        [RelayCommand]
+        public async Task PickGalleryImage()
+        {
+            try
+            {
+                StatusMessage = "Opening gallery...";
+                
+                // Open media picker to select an image from gallery
+                var result = await MediaPicker.PickPhotoAsync();
+                if (result == null)
+                {
+                    // User cancelled
+                    StatusMessage = "Align QR code in frame";
+                    return;
+                }
+
+                StatusMessage = "Decoding image...";
+
+                // Decode the image using ScannerService
+                var scanResult = await _scannerService.DecodeImageAsync(result);
+
+                if (scanResult == null)
+                {
+                    StatusMessage = "No QR code found in image";
+                    await Shell.Current.DisplayAlertAsync(
+                        "Decode Failed",
+                        "No QR code was found in the selected image. Please try another image.",
+                        "OK");
+                    StatusMessage = "Align QR code in frame";
+                    return;
+                }
+
+                StatusMessage = $"Found: {(scanResult.Type == "URL" ? "Link" : "Text")}";
+
+                // Navigate to detail page
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Shell.Current.GoToAsync($"{AppShell.ResultDetailRoute}?id={scanResult.Id}");
+                });
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = "Error decoding image";
+                await Shell.Current.DisplayAlertAsync(
+                    "Error",
+                    $"Failed to decode image: {ex.Message}",
+                    "OK");
+                StatusMessage = "Align QR code in frame";
+            }
+        }
+
         public async Task ProcessScannedTextAsync(string rawValue)
         {
             try

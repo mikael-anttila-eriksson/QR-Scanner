@@ -22,6 +22,13 @@ namespace UIApp.Views
             await _viewModel.RequestCameraPermissionAsync();
         }
 
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            // Stop scanning and clean up to free camera resources
+            CameraBarcodeReaderView.IsEnabled = false;
+        }
+
         private void ConfigureBarcodeReader()
         {
             // QR codes only (MVP scope)

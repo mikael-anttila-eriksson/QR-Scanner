@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using UIApp.Models;
+using ZXing.Net.Maui;
 
 namespace UIApp.Services
 {
@@ -36,6 +37,63 @@ namespace UIApp.Services
                     return null;
 
                 _lastScanTime = DateTime.Now;
+
+                // Classify as URL or PlainText
+                var type = IsLikelyUrl(rawValue) ? "URL" : "PlainText";
+
+                var scanResult = new ScanResult
+                {
+                    RawValue = rawValue,
+                    Type = type,
+                    ScannedAt = DateTime.UtcNow
+                };
+
+                await _storage.InitializeAsync();
+                await _storage.AddAsync(scanResult);
+
+                return scanResult;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Decode a QR code from a static image (file) selected via MediaPicker.
+        /// Uses BarcodeReader.DecodeAsync to decode the image stream.
+        /// Returns the saved ScanResult if a QR code is found and valid, or null if decode fails.
+        /// </summary>
+        public async Task<ScanResult?> DecodeImageAsync(FileResult imageFile)
+        {
+            try
+            {
+                if (imageFile == null)
+                    return null;
+
+                // Open the image file as a stream
+                await using var stream = await imageFile.OpenReadAsync();
+                
+                // Decode using ZXing BarcodeReader
+                var results = await BarcodeReader.DecodeAsync(
+                    stream,
+                    new BarcodeReaderOptions
+                    {
+                        Formats = BarcodeFormat.QrCode,
+                        AutoRotate = true,
+                        TryHarder = true,
+                        Multiple = false
+                    });
+
+                // Check if any barcode was found
+                if (results == null || results.Count() == 0)
+                    return null;
+
+                var barcode = results.First();
+                var rawValue = barcode?.Value;
+
+                if (string.IsNullOrWhiteSpace(rawValue))
+                    return null;
 
                 // Classify as URL or PlainText
                 var type = IsLikelyUrl(rawValue) ? "URL" : "PlainText";
