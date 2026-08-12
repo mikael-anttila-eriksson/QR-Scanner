@@ -56,5 +56,40 @@ namespace UIApp.Views
             // Process through ViewModel (debounce is handled in ScannerService)
             await _viewModel.ProcessScannedTextAsync(rawValue);
         }
+
+        // Pinch-to-zoom handler: maps pinch scale to CameraBarcodeReaderView.ZoomFactor (0..1)
+        private float _startZoom = 0f;
+        private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+        {
+            try
+            {
+                if (CameraBarcodeReaderView == null)
+                    return;
+
+                if (e.Status == GestureStatus.Started)
+                {
+                    _startZoom = CameraBarcodeReaderView.ZoomFactor;
+                }
+                else if (e.Status == GestureStatus.Running)
+                {
+                    // e.Scale is the relative scale since gesture start
+                    var newZoom = (double)(_startZoom * (float)e.Scale);
+                    // Clamp to [0,1]
+                    newZoom = Math.Max(0.0, Math.Min(1.0, newZoom));
+                    CameraBarcodeReaderView.ZoomFactor = (float)newZoom;
+                    // Update status message with percent (user feedback)
+                    _viewModel.StatusMessage = $"Zoom: {Math.Round(newZoom * 100)}%";
+                }
+                else if (e.Status == GestureStatus.Completed || e.Status == GestureStatus.Canceled)
+                {
+                    // restore default status after gesture ends
+                    _viewModel.StatusMessage = "Align QR code in frame";
+                }
+            }
+            catch
+            {
+                // ignore pinch errors
+            }
+        }
     }
 }

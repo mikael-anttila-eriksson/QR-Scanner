@@ -18,7 +18,11 @@
                 BarcodesDetected="OnBarcodesDetected"
                 IsEnabled="{Binding IsScanningEnabled}"
                 Grid.Row="0"
-                Grid.Column="0" />
+                Grid.Column="0">
+                <zxing:CameraBarcodeReaderView.GestureRecognizers>
+                    <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
+                </zxing:CameraBarcodeReaderView.GestureRecognizers>
+            </zxing:CameraBarcodeReaderView>
 
             <!-- Semi-transparent overlay outside viewfinder -->
             <BoxView 
