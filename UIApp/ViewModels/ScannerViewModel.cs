@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using UIApp.Models;
@@ -156,7 +157,15 @@ namespace UIApp.ViewModels
                 StatusMessage = "Opening gallery...";
                 
                 // Open media picker to select an image from gallery
-                var result = await MediaPicker.PickPhotoAsync();
+                // PickPhotoAsync is obsolete in some MAUI workloads — use PickPhotosAsync and take the first selection
+                var files = await MediaPicker.PickPhotosAsync(new MediaPickerOptions
+                {
+                    Title = "Select an image containing a QR code",
+                    // SelectionLimit may be honored by platform; set to 1 for single selection
+                    SelectionLimit = 1
+                });
+                var result = files?.FirstOrDefault();
+
                 if (result == null)
                 {
                     // User cancelled

@@ -103,14 +103,20 @@ Notes: the control-level DelayBetweenContinuousScans already helps reduce duplic
 
 ### 4) Decode from gallery / static image (MediaPicker)
 
+Note: MediaPicker.PickPhotoAsync() is obsolete in recent MAUI workloads. Use `MediaPicker.PickPhotosAsync()` to allow multi-select and to align with platform guidance; pick the first selected image when only one is needed.
+
 ```csharp
-var file = await MediaPicker.Default.PickPhotoAsync();
+// Prefer PickPhotosAsync (returns IEnumerable<FileResult>); select first file
+var files = await MediaPicker.Default.PickPhotosAsync();
+var file = files?.FirstOrDefault();
 if (file == null) return;
+
 await using var stream = await file.OpenReadAsync();
 var results = await BarcodeReader.DecodeAsync(
     stream,
     new BarcodeReaderOptions
     {
+        // For static-image decoding prefer All to maximize discovery across image sources
         Formats = BarcodeFormats.All,
         AutoRotate = true,
         TryHarder = true,

@@ -79,7 +79,8 @@ namespace UIApp.Services
                     stream,
                     new BarcodeReaderOptions
                     {
-                        Formats = BarcodeFormat.QrCode,
+                        //Formats = BarcodeFormat.QrCode,
+                        Formats = BarcodeFormats.All,
                         AutoRotate = true,
                         TryHarder = true,
                         Multiple = false
