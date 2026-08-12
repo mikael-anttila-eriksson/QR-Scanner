@@ -18,6 +18,12 @@
             Icon="icon_history.png"
             ContentTemplate="{DataTemplate local:HistoryPage}"
             Route="history" />
+
+        <ShellContent
+            Title="Generator"
+            Icon="icon_generate.png"
+            ContentTemplate="{DataTemplate local:GeneratorPage}"
+            Route="generator" />
     </TabBar>
 
 </Shell>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:UIApp.ViewModels"
+    x:Class="UIApp.Views.GeneratorPage"
+    x:DataType="vm:GeneratorViewModel"
+    Title="Generator"
+    BackgroundColor="#1e1e1e">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+            <Label Text="QR Generator" TextColor="#ffffff" FontSize="20" FontAttributes="Bold" />
+
+            <Label Text="Enter text to encode:" TextColor="#ddd" />
+            <Editor
+                Text="{Binding Content, Mode=TwoWay}"
+                Placeholder="Enter text to generate a QR code"
+                BackgroundColor="#2a2a2a"
+                TextColor="#fff"
+                AutoSize="TextChanges"
+                HeightRequest="120" />
+
+            <Label TextColor="#aaa" FontSize="12" Text="{Binding CharCountDisplay}" HorizontalOptions="End" />
+
+            <Button
+                Text="Generate"
+                Command="{Binding GenerateCommand}"
+                IsEnabled="{Binding CanGenerate}"
+                BackgroundColor="#2196F3"
+                TextColor="#fff" />
+
+            <Frame BackgroundColor="#222" Padding="8" CornerRadius="8" IsVisible="{Binding IsImageAvailable}">
+                <Image Source="{Binding GeneratedImageSource}" Aspect="AspectFit" HeightRequest="300" />
+            </Frame>
+
+            <HorizontalStackLayout Spacing="12" IsVisible="{Binding IsImageAvailable}">
+                <Button Text="Save" Command="{Binding SaveCommand}" BackgroundColor="#4CAF50" TextColor="#fff" />
+                <Button Text="Share" Command="{Binding ShareCommand}" BackgroundColor="#FF9800" TextColor="#fff" />
+            </HorizontalStackLayout>
+
+            <Label TextColor="#777" FontSize="12" Text="Note: Keep content under the recommended length for reliable scanning." />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
