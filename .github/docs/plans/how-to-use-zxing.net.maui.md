@@ -1,4 +1,18 @@
-# How to Use ZXing.Net.MAUI for QR Code Scanning
+---
+title: "How to Use ZXing.Net.MAUI for QR Code Scanning (Part 1)"
+status: Puplished
+part: 1
+purpose: "Initialization and setup guidance for ZXing.Net.MAUI in this project's MVP. Covers package installation and MauiProgram initialization."
+audience: "Developers, Implementing Agent"
+update_frequency: as-needed
+contains:
+  - Package installation
+  - MauiProgram initialization
+  - Camera control examples
+  - Permissions and runtime setup
+---
+
+# How to Use ZXing.Net.MAUI for QR Code Scanning (Part 1)
 
 ## Overview
 
