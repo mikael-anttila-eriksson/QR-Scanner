@@ -38,8 +38,41 @@ namespace UIApp.Services
 
                 _lastScanTime = DateTime.Now;
 
-                // Classify as URL or PlainText
-                var type = IsLikelyUrl(rawValue) ? "URL" : "PlainText";
+                // Extended classification using pure parsers: WiFi, vCard, Calendar, URL, PlainText
+                string type = "PlainText";
+                object? parsedPayload = null;
+
+                // Try WiFi
+                var wifi = PayloadParsers.ParseWifi(rawValue);
+                if (wifi != null)
+                {
+                    type = "WiFi";
+                    parsedPayload = wifi;
+                }
+                else
+                {
+                    // Try vCard
+                    var vcard = PayloadParsers.ParseVCard(rawValue);
+                    if (vcard != null)
+                    {
+                        type = "vCard";
+                        parsedPayload = vcard;
+                    }
+                    else
+                    {
+                        // Try VEVENT / Calendar
+                        var ev = PayloadParsers.ParseVEvent(rawValue);
+                        if (ev != null)
+                        {
+                            type = "Calendar";
+                            parsedPayload = ev;
+                        }
+                        else if (IsLikelyUrl(rawValue))
+                        {
+                            type = "URL";
+                        }
+                    }
+                }
 
                 var scanResult = new ScanResult
                 {
@@ -48,6 +81,7 @@ namespace UIApp.Services
                     ScannedAt = DateTime.UtcNow
                 };
 
+                // Persist scan result (parsed payload is intentionally not stored here to keep DB schema unchanged)
                 await _storage.InitializeAsync();
                 await _storage.AddAsync(scanResult);
 
@@ -96,8 +130,41 @@ namespace UIApp.Services
                 if (string.IsNullOrWhiteSpace(rawValue))
                     return null;
 
-                // Classify as URL or PlainText
-                var type = IsLikelyUrl(rawValue) ? "URL" : "PlainText";
+                // Extended classification using pure parsers: WiFi, vCard, Calendar, URL, PlainText
+                string type = "PlainText";
+                object? parsedPayload = null;
+
+                // Try WiFi
+                var wifi = PayloadParsers.ParseWifi(rawValue);
+                if (wifi != null)
+                {
+                    type = "WiFi";
+                    parsedPayload = wifi;
+                }
+                else
+                {
+                    // Try vCard
+                    var vcard = PayloadParsers.ParseVCard(rawValue);
+                    if (vcard != null)
+                    {
+                        type = "vCard";
+                        parsedPayload = vcard;
+                    }
+                    else
+                    {
+                        // Try VEVENT / Calendar
+                        var ev = PayloadParsers.ParseVEvent(rawValue);
+                        if (ev != null)
+                        {
+                            type = "Calendar";
+                            parsedPayload = ev;
+                        }
+                        else if (IsLikelyUrl(rawValue))
+                        {
+                            type = "URL";
+                        }
+                    }
+                }
 
                 var scanResult = new ScanResult
                 {
@@ -108,7 +175,6 @@ namespace UIApp.Services
 
                 await _storage.InitializeAsync();
                 await _storage.AddAsync(scanResult);
-
                 return scanResult;
             }
             catch
