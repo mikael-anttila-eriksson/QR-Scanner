@@ -40,6 +40,8 @@ namespace UIApp
             // Register services (concrete types used directly; no interfaces for this simple app)
             builder.Services.AddSingleton<Services.SqliteStorageService>();
             builder.Services.AddSingleton<Services.ScannerService>();
+            // Sound service: default no-op implementation (platform-specific implementations may override)
+            builder.Services.AddSingleton<Services.ISoundService, Services.NoOpSoundService>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
