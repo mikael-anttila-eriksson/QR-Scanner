@@ -24,6 +24,12 @@
             Icon="icon_generate.png"
             ContentTemplate="{DataTemplate local:GeneratorPage}"
             Route="generator" />
+
+        <ShellContent
+            Title="Settings"
+            Icon="icon_settings.png"
+            ContentTemplate="{DataTemplate local:SettingsPage}"
+            Route="settings" />
     </TabBar>
 
 </Shell>

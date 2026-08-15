@@ -31,11 +31,13 @@ namespace UIApp
             builder.Services.AddTransient<HistoryPage>();
             builder.Services.AddTransient<ResultDetailPage>();
             builder.Services.AddTransient<GeneratorPage>();
+            builder.Services.AddTransient<SettingsPage>();
 
             builder.Services.AddTransient<ScannerViewModel>();
             builder.Services.AddTransient<HistoryViewModel>();
             builder.Services.AddTransient<ResultDetailViewModel>();
             builder.Services.AddTransient<GeneratorViewModel>();
+            builder.Services.AddTransient<SettingsViewModel>();
 
             // Register services (concrete types used directly; no interfaces for this simple app)
             builder.Services.AddSingleton<Services.SqliteStorageService>();

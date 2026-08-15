@@ -5,15 +5,18 @@ using CommunityToolkit.Mvvm.Input;
 using UIApp.Models;
 using UIApp.Services;
 using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Storage;
 using Microsoft.Maui.Essentials;
 using Microsoft.Maui.Controls;
 using ZXing.Net.Maui.Controls;
+using System;
 
 namespace UIApp.ViewModels
 {
     public partial class ScannerViewModel : BaseViewModel
     {
         private readonly ScannerService _scannerService;
+        private readonly Services.ISoundService _soundService;
         private CameraBarcodeReaderView? _cameraView;
 
         [ObservableProperty]
@@ -34,9 +37,10 @@ namespace UIApp.ViewModels
         [ObservableProperty]
         public partial string TorchButtonText { get; set; } = "🔦 Off";
 
-        public ScannerViewModel(ScannerService scannerService)
+        public ScannerViewModel(ScannerService scannerService, Services.ISoundService soundService)
         {
             _scannerService = scannerService;
+            _soundService = soundService;
         }
 
         public void SetCameraView(CameraBarcodeReaderView? cameraView)
@@ -191,6 +195,23 @@ namespace UIApp.ViewModels
 
                 StatusMessage = $"Found: {(scanResult.Type == "URL" ? "Link" : "Text")}";
 
+                // Haptic and sound feedback based on settings
+                try
+                {
+                    var isHaptic = Preferences.Get("settings_haptic_on", true);
+                    if (isHaptic)
+                    {
+                        try { Microsoft.Maui.Devices.Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(50)); } catch { }
+                    }
+
+                    var isSound = Preferences.Get("settings_sound_on", true);
+                    if (isSound)
+                    {
+                        await _soundService.PlayShortBeepAsync();
+                    }
+                }
+                catch { }
+
                 // Navigate to detail page
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
@@ -216,11 +237,31 @@ namespace UIApp.ViewModels
 
                 if (scanResult == null)
                 {
-                    await Shell.Current.DisplayAlertAsync("", "Couldn't read QR code, try again.", "OK");
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        await Shell.Current.DisplayAlertAsync("", "Couldn't read QR code, try again.", "OK");
+                    });
                     return;
                 }
 
                 StatusMessage = $"Scanned: {(scanResult.Type == "URL" ? "Link" : "Text")}";
+
+                // Haptic and sound feedback based on settings
+                try
+                {
+                    var isHaptic = Preferences.Get("settings_haptic_on", true);
+                    if (isHaptic)
+                    {
+                        try { Microsoft.Maui.Devices.Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(50)); } catch { }
+                    }
+
+                    var isSound = Preferences.Get("settings_sound_on", true);
+                    if (isSound)
+                    {
+                        await _soundService.PlayShortBeepAsync();
+                    }
+                }
+                catch { }
 
                 // Navigate to detail page
                 await MainThread.InvokeOnMainThreadAsync(async () =>
@@ -231,7 +272,10 @@ namespace UIApp.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = "Error scanning";
-                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                });
             }
         }
 
