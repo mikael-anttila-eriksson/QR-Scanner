@@ -7,6 +7,8 @@ namespace UIApp
         public App()
         {
             InitializeComponent();
+            // Enforce dark theme for MVP as specified in the implementation plan
+            this.UserAppTheme = AppTheme.Dark;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

@@ -13,7 +13,7 @@ This spec is split into **MVP** (build first, ship first) and **Phase 2** (defer
 | Framework | .NET 10, .NET MAUI |
 | Target platform | Android only (remove/ignore iOS, Windows, macOS heads) |
 | Scanning library | ZXing.Net.MAUI (`ZXing.Net.Maui.Controls`) |
-| Local storage | SQLite via `sqlite-net-pcl` |
+| Local storage | SQLite via `sqlite-net-pcl` (requires `SQLitePCLRaw.bundle_green` native bundle) |
 | Architecture pattern | MVVM (`CommunityToolkit.Mvvm` recommended for `[ObservableProperty]` / `[RelayCommand]` source generators) |
 | Navigation | **.NET MAUI Shell** (`AppShell.xaml`), using a **`TabBar`** for the top-level pages (chosen over a `FlyoutItem`/hamburger-menu layout). All pages are registered as Shell routes; navigation goes through `Shell.Current.GoToAsync(...)`, not manual `Navigation.PushAsync`. |
 | Min Android API | Target the current minimum MAUI-supported Android API level; confirm against ZXing.Net.MAUI's supported range at implementation time |
@@ -50,6 +50,23 @@ AppShell
 - `ResultDetailPage` is not part of the `TabBar` — it's registered separately with `Routing.RegisterRoute("resultdetail", typeof(ResultDetailPage));` in `AppShell.xaml.cs`, and reached via `GoToAsync("resultdetail?id=...")`, which pushes onto the nav stack on top of whichever tab is active.
 - Pass scan results between pages via query parameters (`GoToAsync($"resultdetail?id={scanId}")` with `[QueryProperty]` on the destination ViewModel) rather than passing objects through constructors — this is the Shell-idiomatic pattern and keeps pages independently navigable/deep-linkable.
 - Phase 2 screens (Generator, Settings) get added as additional `ShellContent` entries inside the same `TabBar` once built — the structure above should anticipate this so MVP doesn't need restructuring later.
+
+### 2.2 Data persistance choice
+
+Local storage: SQLite via `sqlite-net-pcl`.
+
+Required packages:
+- `sqlite-net-pcl`
+- `SQLitePCLRaw.bundle_green` — native SQLite binary bundle required by `sqlite-net-pcl` on target platforms.
+
+Startup step (MauiProgram.cs, before any DB access):
+
+```csharp
+// Initialize the native SQLite provider
+SQLitePCL.Batteries_V2.Init();
+```
+
+For full rationale, pitfalls, and implementation details see `.github/docs/architecture.md`.
 
 ## 3. UI Design (simple, MVP-scope)
 
@@ -215,20 +232,21 @@ No additional back-stack manipulation or custom navigation handlers needed in MV
 
 ## 7. MVP Acceptance Criteria
 
-- [ ] App builds and runs on Android only
-- [ ] Shell navigation in place with Scanner and History as tabs, ResultDetail as a pushed route
-- [ ] Live camera scan detects a QR code, decodes it, applies debounce, and navigates to Result Detail
-- [ ] Result screen correctly distinguishes URL vs plain text and shows the right primary action
-- [ ] Copy and Share actions work from the Result Detail screen
-- [ ] Every successful scan is persisted to SQLite and appears in History, surviving app restart
-- [ ] History supports tap-to-reopen and swipe-to-delete
-- [ ] Empty history state is handled (not a blank screen)
-- [ ] Camera permission denial shows an explanation and a working link to system settings
-- [ ] Malformed/empty decode results do not create a history entry or crash the app
-- [ ] Entire UI renders in dark theme regardless of system theme setting
+- [x] App builds and runs on Android only
+- [x] Shell navigation in place with Scanner and History as tabs, ResultDetail as a pushed route
+- [x] Live camera scan detects a QR code, decodes it, applies debounce, and navigates to Result Detail
+- [x] Result screen correctly distinguishes URL vs plain text and shows the right primary action
+- [x] Copy and Share actions work from the Result Detail screen
+- [x] Every successful scan is persisted to SQLite and appears in History, surviving app restart
+- [x] History supports tap-to-reopen and swipe-to-delete
+- [x] Empty history state is handled (not a blank screen)
+- [x] Camera permission denial shows an explanation and a working link to system settings
+- [ ] Malformed/empty decode results do not create a history entry or crash the app *(deferred to Phase 2: requires malformed QR test vectors)*
+- [x] Entire UI renders in dark theme regardless of system theme setting
 
 ## 8. Phase 2 Acceptance Criteria
 
+- [ ] Malformed/empty decode results are validated and rejected (test vectors with corrupted/empty QR payloads)
 - [ ] Gallery image scanning successfully decodes an embedded QR code
 - [ ] Torch and pinch-to-zoom work during live scanning
 - [ ] WiFi, vCard, and calendar payloads each trigger their correct type-specific action

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android; net10.0-windows10.0.19041.0</TargetFrameworks>		
@@ -62,8 +62,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Primary barcode/QR scanning library for MAUI -->
+		<PackageReference Include="ZXing.Net.Maui.Controls" Version="0.10.3" />
+		
+		<!-- SQLite persistence (as per spec) -->
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.2" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.2" />
+		
+		<!-- MVVM source generators -->
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		
+		<!-- Existing MAUI packages -->
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-	</ItemGroup>
+	
+		<!-- MAUI Essentials for permissions, clipboard, share, launcher -->	
+	</ItemGroup>	
 
 </Project>
