@@ -18,11 +18,14 @@
                 BarcodesDetected="OnBarcodesDetected"
                 IsEnabled="{Binding IsScanningEnabled}"
                 Grid.Row="0"
-                Grid.Column="0">
-                <zxing:CameraBarcodeReaderView.GestureRecognizers>
+                Grid.Column="0" />
+
+            <!-- Transparent gesture overlay to capture pinch reliably -->
+            <Grid Grid.Row="0" Grid.Column="0" BackgroundColor="Transparent">
+                <Grid.GestureRecognizers>
                     <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
-                </zxing:CameraBarcodeReaderView.GestureRecognizers>
-            </zxing:CameraBarcodeReaderView>
+                </Grid.GestureRecognizers>
+            </Grid>
 
             <!-- Semi-transparent overlay outside viewfinder -->
             <BoxView 
@@ -56,6 +59,14 @@
                 VerticalOptions="Start"
                 HorizontalOptions="End"
                 Margin="0,16,16,0" />
+
+            <!-- Zoom HUD (top-center) -->
+            <Border Grid.Row="0" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Start" Margin="0,20,0,0" Padding="8,6" Stroke="#444" BackgroundColor="#00000088" StrokeThickness="1" IsVisible="False" x:Name="ZoomHud">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Label Text="Zoom: 0%" TextColor="#fff" FontSize="13" x:Name="ZoomHudLabel" />
+            </Border>
 
             <!-- Viewfinder rectangle (border only) -->
             <Border 

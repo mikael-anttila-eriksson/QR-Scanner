@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UIApp.ViewModels;
 using ZXing.Net.Maui.Controls;
 using ZXing.Net.Maui;
@@ -22,6 +23,13 @@ namespace UIApp.Views
             await _viewModel.RequestCameraPermissionAsync();
             // Pass camera view reference to ViewModel for torch control
             _viewModel.SetCameraView(CameraBarcodeReaderView);
+
+            // Sync current zoom
+            try
+            {
+                _currentZoomFactor = CameraBarcodeReaderView?.ZoomFactor ?? 0f;
+            }
+            catch (Exception ex) { Debug.WriteLine($"OnAppearing exception: {ex}"); }
         }
 
         protected override void OnDisappearing()
@@ -50,45 +58,77 @@ namespace UIApp.Views
 
             var barcode = args.Results.FirstOrDefault();
             if (barcode == null) return;
-            
+
             var rawValue = barcode.Value;
 
             // Process through ViewModel (debounce is handled in ScannerService)
             await _viewModel.ProcessScannedTextAsync(rawValue);
         }
 
-        // Pinch-to-zoom handler: maps pinch scale to CameraBarcodeReaderView.ZoomFactor (0..1)
-        private float _startZoom = 0f;
+        /// <summary>
+        /// Tracks the active zoom level across the lifetime of the application. Between 0 and 1.
+        /// </summary>
+        private float _currentZoomFactor = 0f;
+        /// <summary>
+        /// Maximum zoom factor (1.0 = 100% zoom).
+        /// </summary>
+        private const float _maxZoomF = 1f;
+        /// <summary>
+        /// Minimum zoom factor (0.0 = no zoom).
+        /// </summary>
+        private const float _minZoomF = 0f;
+        /// <summary>
+        /// Adjust this to change how fast or slow the camera zooms.
+        /// </summary>
+        private const float _sensitivity = 0.5f;
+        /// <summary>
+        /// Handles pinch gesture updates to adjust the camera's zoom factor. The zoom factor is clamped between _minZoomF and _maxZoomF, and the current zoom level is tracked in _currentZoomFactor. The HUD is updated to show the current zoom level, and it is hidden after a short delay when the pinch gesture is completed or canceled.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
         {
             try
             {
-                if (CameraBarcodeReaderView == null)
-                    return;
+                if (CameraBarcodeReaderView == null) return;
 
                 if (e.Status == GestureStatus.Started)
                 {
-                    _startZoom = CameraBarcodeReaderView.ZoomFactor;
+
                 }
                 else if (e.Status == GestureStatus.Running)
                 {
-                    // e.Scale is the relative scale since gesture start
-                    var newZoom = (double)(_startZoom * (float)e.Scale);
-                    // Clamp to [0,1]
-                    newZoom = Math.Max(0.0, Math.Min(1.0, newZoom));
-                    CameraBarcodeReaderView.ZoomFactor = (float)newZoom;
-                    // Update status message with percent (user feedback)
-                    _viewModel.StatusMessage = $"Zoom: {Math.Round(newZoom * 100)}%";
+                    // e.Scale > 1 = pinching out (zoom in), < 1 = pinching in (zoom out)
+
+                    var delta = (float)(e.Scale - 1.0) * _sensitivity;
+                    _currentZoomFactor += delta;
+                    _currentZoomFactor = Math.Clamp(_currentZoomFactor, _minZoomF, _maxZoomF);
+
+                    // Apply zoom factor on the main thread
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        try { CameraBarcodeReaderView.ZoomFactor = _currentZoomFactor; }
+                        catch (Exception ex) { Debug.WriteLine($"Failed to set ZoomFactor during pinch: {ex}"); }
+
+                        Debug.WriteLine($"Pinch Running: scale={(double)e.Scale:0.00}, applied={_currentZoomFactor:0.000}");
+
+                        // Update HUD and viewmodel status with normalized 0..1 value as requested
+                        var normalizedDisplay = Math.Round(_currentZoomFactor, 2);
+                        _viewModel.StatusMessage = $"Zoom: {normalizedDisplay:0.##}";
+
+                        try { ZoomHudLabel.Text = $"Zoom: {normalizedDisplay:0.##}"; ZoomHud.IsVisible = true; } catch { }
+                    });
                 }
                 else if (e.Status == GestureStatus.Completed || e.Status == GestureStatus.Canceled)
                 {
-                    // restore default status after gesture ends
+                    // Hide HUD after a short delay
+                    MainThread.BeginInvokeOnMainThread(async () => { await Task.Delay(900); try { ZoomHud.IsVisible = false; } catch { } });
                     _viewModel.StatusMessage = "Align QR code in frame";
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // ignore pinch errors
+                Debug.WriteLine($"Pinch handler exception: {ex}");
             }
         }
     }
