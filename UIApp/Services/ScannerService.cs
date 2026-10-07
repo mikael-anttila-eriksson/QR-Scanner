@@ -107,7 +107,7 @@ namespace UIApp.Services
 
                 // Open the image file as a stream
                 await using var stream = await imageFile.OpenReadAsync();
-                
+
                 // Decode using ZXing BarcodeReader
                 var results = await BarcodeReader.DecodeAsync(
                     stream,
@@ -175,6 +175,7 @@ namespace UIApp.Services
 
                 await _storage.InitializeAsync();
                 await _storage.AddAsync(scanResult);
+
                 return scanResult;
             }
             catch
