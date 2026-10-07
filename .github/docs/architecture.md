@@ -20,6 +20,19 @@ does_not_contain:
 
 A small, single-purpose .NET MAUI app (Android-only) that performs live QR scanning, persists scan results locally, and provides simple actions (Open/Copy/Share). The app is MVVM-based, Shell-navigated (TabBar for Scanner and History), and targets a minimal, dark-themed UI for quick scanning workflows.
 
+## Tech Stack
+
+| Component | Package | Version |
+|-----------|---------|---------|
+| Framework | .NET MAUI | 10.0 |
+| Scanning | ZXing.Net.Maui.Controls | 0.10.3 |
+| Persistence | sqlite-net-pcl | 1.9.2 |
+| SQLite Native Bundle | SQLitePCLRaw.bundle_green | 2.1.2 |
+| MVVM | CommunityToolkit.Mvvm | 8.4.2 |
+| Logging | Microsoft.Extensions.Logging.Debug | 10.0.0 |
+| Target Platforms | net10.0-android, net10.0-windows10.0.19041.0 | |
+| Minimum Android | Android | 21.0 |
+
 ## High-Level Architecture
 
 - UI: .NET MAUI with Shell and TabBar (Scanner, History). ResultDetail is a routed page pushed on top of tabs.

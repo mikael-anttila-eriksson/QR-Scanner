@@ -16,6 +16,8 @@ does_not_contain:
 
 # Overview
 
+## Tech Stack
+
 ## Application Overview
 
 ## High-Level Architecture
