@@ -18,10 +18,10 @@ namespace UIApp.ViewModels
         public ObservableCollection<ScanResult> Items { get; } = new ObservableCollection<ScanResult>();
 
         [ObservableProperty]
-        private bool isEmpty = true;
+        public partial bool IsEmpty { get; set; } = true;
 
         [ObservableProperty]
-        private bool showFavoritesOnly = false;
+        public partial bool ShowFavoritesOnly { get; set; } = false;
 
         public HistoryViewModel(SqliteStorageService storage)
         {
