@@ -1,15 +1,9 @@
 using System.Text.RegularExpressions;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using UIApp.Models;
 using UIApp.Services;
-using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Storage;
-using Microsoft.Maui.Essentials;
-using Microsoft.Maui.Controls;
 using ZXing.Net.Maui.Controls;
-using System;
+using System.Diagnostics;
 
 namespace UIApp.ViewModels
 {
@@ -153,13 +147,42 @@ namespace UIApp.ViewModels
             TorchButtonText = IsTorchOn ? "💡 On" : "🔦 Off";
         }
 
+        private async Task ProvideFeedbackAsync()
+        {
+            try
+            {
+                var isHaptic = Preferences.Get("settings_haptic_on", true);
+                if (isHaptic)
+                {
+                    try
+                    {
+                        Microsoft.Maui.Devices.Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(150));
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Haptic feedback failed: {ex.Message}");
+                    }
+                }
+
+                var isSound = Preferences.Get("settings_sound_on", true);
+                if (isSound)
+                {
+                    await _soundService.PlayShortBeepAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to provide feedback: {ex.Message}");
+            }
+        }
+
         [RelayCommand]
         public async Task PickGalleryImage()
         {
             try
             {
                 StatusMessage = "Opening gallery...";
-                
+
                 // Open media picker to select an image from gallery
                 // PickPhotoAsync is obsolete in some MAUI workloads — use PickPhotosAsync and take the first selection
                 var files = await MediaPicker.PickPhotosAsync(new MediaPickerOptions
@@ -195,22 +218,8 @@ namespace UIApp.ViewModels
 
                 StatusMessage = $"Found: {(scanResult.Type == "URL" ? "Link" : "Text")}";
 
-                // Haptic and sound feedback based on settings
-                try
-                {
-                    var isHaptic = Preferences.Get("settings_haptic_on", true);
-                    if (isHaptic)
-                    {
-                        try { Microsoft.Maui.Devices.Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(50)); } catch { }
-                    }
-
-                    var isSound = Preferences.Get("settings_sound_on", true);
-                    if (isSound)
-                    {
-                        await _soundService.PlayShortBeepAsync();
-                    }
-                }
-                catch { }
+                // Haptic and sound feedback
+                await ProvideFeedbackAsync();
 
                 // Navigate to detail page
                 await MainThread.InvokeOnMainThreadAsync(async () =>
@@ -246,22 +255,8 @@ namespace UIApp.ViewModels
 
                 StatusMessage = $"Scanned: {(scanResult.Type == "URL" ? "Link" : "Text")}";
 
-                // Haptic and sound feedback based on settings
-                try
-                {
-                    var isHaptic = Preferences.Get("settings_haptic_on", true);
-                    if (isHaptic)
-                    {
-                        try { Microsoft.Maui.Devices.Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(50)); } catch { }
-                    }
-
-                    var isSound = Preferences.Get("settings_sound_on", true);
-                    if (isSound)
-                    {
-                        await _soundService.PlayShortBeepAsync();
-                    }
-                }
-                catch { }
+                // Haptic and sound feedback
+                await ProvideFeedbackAsync();
 
                 // Navigate to detail page
                 await MainThread.InvokeOnMainThreadAsync(async () =>
@@ -282,7 +277,7 @@ namespace UIApp.ViewModels
         private bool IsLikelyUrl(string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return false;
-            return Uri.IsWellFormedUriString(text, UriKind.Absolute) || 
+            return Uri.IsWellFormedUriString(text, UriKind.Absolute) ||
                    Regex.IsMatch(text, @"^https?://", RegexOptions.IgnoreCase);
         }
     }

@@ -23,8 +23,8 @@ namespace UIApp
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 })
                 .UseBarcodeReader(); // Add ZXing controls to MAUI
-            
-            
+
+
 
             // Register pages and viewmodels for DI
             builder.Services.AddTransient<ScannerPage>();
@@ -42,11 +42,14 @@ namespace UIApp
             // Register services (concrete types used directly; no interfaces for this simple app)
             builder.Services.AddSingleton<Services.SqliteStorageService>();
             builder.Services.AddSingleton<Services.ScannerService>();
-            // Sound service: default no-op implementation (platform-specific implementations may override)
+#if ANDROID
+            builder.Services.AddSingleton<Services.ISoundService, Platforms.Android.Services.AndroidSoundService>();
+#else
             builder.Services.AddSingleton<Services.ISoundService, Services.NoOpSoundService>();
+#endif
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
