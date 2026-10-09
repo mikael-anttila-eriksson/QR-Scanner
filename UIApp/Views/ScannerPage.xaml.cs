@@ -23,6 +23,7 @@ namespace UIApp.Views
             await _viewModel.RequestCameraPermissionAsync();
             // Pass camera view reference to ViewModel for torch control
             _viewModel.SetCameraView(CameraBarcodeReaderView);
+            await _viewModel.RefreshTorchSupportAsync();
 
             // Sync current zoom
             try

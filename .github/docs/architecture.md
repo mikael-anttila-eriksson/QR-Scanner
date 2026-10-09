@@ -218,4 +218,4 @@ Simplicity and speed of implementation are prioritized over long-term extensibil
 ## Known Limitations
 
 - Android-only targeting (no iOS/Windows support planned in this repo for MVP).
-- Minimal validation on relative timestamp formatting and toasts; Phase 2 can refine UX.
+- Torch availability is checked with MAUI's device-level flashlight API, while torch control uses ZXing's active camera. If camera selection is added, support should be verified for the selected camera.

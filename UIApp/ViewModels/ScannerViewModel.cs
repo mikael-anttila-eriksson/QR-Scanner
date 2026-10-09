@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Devices;
 using UIApp.Services;
 using ZXing.Net.Maui.Controls;
 using System.Diagnostics;
@@ -26,7 +27,7 @@ namespace UIApp.ViewModels
         public partial bool IsTorchOn { get; set; } = false;
 
         [ObservableProperty]
-        public partial bool IsTorchSupported { get; set; } = true;
+        public partial bool IsTorchSupported { get; set; }
 
         [ObservableProperty]
         public partial string TorchButtonText { get; set; } = "🔦 Off";
@@ -43,8 +44,32 @@ namespace UIApp.ViewModels
             if (cameraView == null)
             {
                 IsTorchOn = false;
-                UpdateTorchButtonText();
+                IsTorchSupported = false;
             }
+
+            UpdateTorchButtonText();
+        }
+
+        public async Task RefreshTorchSupportAsync()
+        {
+            IsTorchSupported = false;
+
+            if (_cameraView == null || !IsScanningEnabled)
+                return;
+
+            try
+            {
+                IsTorchSupported = await Flashlight.Default.IsSupportedAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to check flashlight support: {ex}");
+            }
+
+            if (!IsTorchSupported)
+                IsTorchOn = false;
+
+            UpdateTorchButtonText();
         }
 
         public async Task RequestCameraPermissionAsync()
@@ -122,7 +147,7 @@ namespace UIApp.ViewModels
         {
             try
             {
-                if (_cameraView == null)
+                if (_cameraView == null || !IsTorchSupported)
                     return;
 
                 // Toggle torch state
@@ -144,7 +169,9 @@ namespace UIApp.ViewModels
 
         private void UpdateTorchButtonText()
         {
-            TorchButtonText = IsTorchOn ? "💡 On" : "🔦 Off";
+            TorchButtonText = !IsTorchSupported
+                ? "🔦 Unavailable"
+                : IsTorchOn ? "💡 On" : "🔦 Off";
         }
 
         private async Task ProvideFeedbackAsync()
