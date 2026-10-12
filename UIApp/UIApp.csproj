@@ -66,8 +66,12 @@
 		<PackageReference Include="ZXing.Net.Maui.Controls" Version="0.10.3" />
 		
 		<!-- SQLite persistence (as per spec) -->
-		<PackageReference Include="sqlite-net-pcl" Version="1.9.2" />
-		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.2" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+		<!-- Tvinga fram den säkra versionen av det underliggande biblioteket till qlite-net-pcl (Löser CVE-2025-6965) -->
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.android" Version="2.1.13" />
+		<!-- SQLite brygga -->
+		<PackageReference Include="SourceGear.sqlite3" Version="3.53.4" />
 		
 		<!-- MVVM source generators -->
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
