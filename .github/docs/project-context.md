@@ -69,6 +69,8 @@ Complete implementation-plan items 9-11: add focused unit tests, establish CI, a
 ## Bugs
 - Resolve the planned type-specific actions for WiFi, vCard, and calendar values or explicitly defer that acceptance criterion.
 - Malformed/empty decode handling still needs test-vector coverage and verification.
+- Generator Save writes PNG files to app-private `FileSystem.AppDataDirectory`, so users cannot readily find them in the gallery or normal file browser.
+- Generator Save and Share regenerate from the current input rather than the content used for the displayed preview; editing input after generation can make the preview differ from the saved or shared image.
 
 ## Technical Debt
 - App behavior has no automated test coverage yet.
