@@ -30,9 +30,12 @@
                 BackgroundColor="#2196F3"
                 TextColor="#fff" />
 
-            <Frame BackgroundColor="#222" Padding="8" CornerRadius="8" IsVisible="{Binding IsImageAvailable}">
+            <Border Background="#222" Padding="8" StrokeThickness="0" IsVisible="{Binding IsImageAvailable}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
                 <Image Source="{Binding GeneratedImageSource}" Aspect="AspectFit" HeightRequest="300" />
-            </Frame>
+            </Border>
 
             <HorizontalStackLayout Spacing="12" IsVisible="{Binding IsImageAvailable}">
                 <Button Text="Save" Command="{Binding SaveCommand}" BackgroundColor="#4CAF50" TextColor="#fff" />
