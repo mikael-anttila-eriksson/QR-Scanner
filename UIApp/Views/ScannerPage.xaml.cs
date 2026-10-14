@@ -29,7 +29,7 @@ namespace UIApp.Views
             try
             {
                 _currentZoomFactor = CameraBarcodeReaderView?.ZoomFactor ?? 0f;
-            }
+        }
             catch (Exception ex) { Debug.WriteLine($"OnAppearing exception: {ex}"); }
         }
 
@@ -59,7 +59,7 @@ namespace UIApp.Views
 
             var barcode = args.Results.FirstOrDefault();
             if (barcode == null) return;
-
+            
             var rawValue = barcode.Value;
 
             // Process through ViewModel (debounce is handled in ScannerService)

@@ -275,7 +275,7 @@ namespace UIApp.ViewModels
                 {
                     await MainThread.InvokeOnMainThreadAsync(async () =>
                     {
-                        await Shell.Current.DisplayAlertAsync("", "Couldn't read QR code, try again.", "OK");
+                    await Shell.Current.DisplayAlertAsync("", "Couldn't read QR code, try again.", "OK");
                     });
                     return;
                 }
@@ -296,7 +296,7 @@ namespace UIApp.ViewModels
                 StatusMessage = "Error scanning";
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
-                    await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
                 });
             }
         }
@@ -304,7 +304,7 @@ namespace UIApp.ViewModels
         private bool IsLikelyUrl(string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return false;
-            return Uri.IsWellFormedUriString(text, UriKind.Absolute) ||
+            return Uri.IsWellFormedUriString(text, UriKind.Absolute) || 
                    Regex.IsMatch(text, @"^https?://", RegexOptions.IgnoreCase);
         }
     }

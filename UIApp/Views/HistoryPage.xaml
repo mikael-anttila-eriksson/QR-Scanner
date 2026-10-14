@@ -26,12 +26,12 @@
                     </HorizontalStackLayout>
                     <Button Grid.Column="1" Text="Clear All" Command="{Binding ClearAllCommand}" BackgroundColor="#e53935" TextColor="#fff" Padding="12,8" CornerRadius="6" FontSize="13" />
                 </Grid>
-
+            
                 <!-- Empty State -->
                 <StackLayout IsVisible="{Binding IsEmpty}" HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
                     <Label Text="No scans yet" HorizontalOptions="Center" TextColor="#888" FontSize="16" FontAttributes="Bold" />
-                    <Label Text="Open the Scanner tab to create new scans." HorizontalOptions="Center" TextColor="#666" FontSize="12" />
-                </StackLayout>
+                <Label Text="Open the Scanner tab to create new scans." HorizontalOptions="Center" TextColor="#666" FontSize="12" />
+            </StackLayout>
             </VerticalStackLayout>
 
             <!-- List Container with Border -->
@@ -42,39 +42,39 @@
                     IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
                     Padding="0">
                 <CollectionView ItemsSource="{Binding Items}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:ScanResult">
-                            <SwipeView>
-                                <SwipeView.RightItems>
-                                    <SwipeItems Mode="Execute">
-                                        <SwipeItem Text="Delete" BackgroundColor="#e53935" Command="{Binding Source={x:Reference QRHistoryPage}, Path=BindingContext.DeleteCommand}" CommandParameter="{Binding .}" />
-                                    </SwipeItems>
-                                </SwipeView.RightItems>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ScanResult">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Execute">
+                                    <SwipeItem Text="Delete" BackgroundColor="#e53935" Command="{Binding Source={x:Reference QRHistoryPage}, Path=BindingContext.DeleteCommand}" CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
 
                                 <Grid Padding="12" RowSpacing="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                                </Grid.ColumnDefinitions>
 
-                                    <StackLayout Grid.Column="0">
+                                <StackLayout Grid.Column="0">
                                         <Label Text="{Binding RawValue}" LineBreakMode="TailTruncation" TextColor="#fff" FontSize="14" />
-                                    </StackLayout>
+                                </StackLayout>
 
                                     <!-- Favorite star -->
                                     <Label Grid.Column="1" Text="★" TextColor="#FFD700" VerticalOptions="Center" IsVisible="{Binding IsFavorite}" Margin="8,0" />
 
                                     <Label Grid.Column="2" Text="{Binding ScannedAt, Converter={StaticResource TimeAgoConverter}}" TextColor="#aaa" HorizontalOptions="End" VerticalOptions="Center" FontSize="12" />
 
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={x:Reference QRHistoryPage}, Path=BindingContext.ItemSelectedCommand}" CommandParameter="{Binding .}" />
-                                    </Grid.GestureRecognizers>
-                                </Grid>
-                            </SwipeView>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference QRHistoryPage}, Path=BindingContext.ItemSelectedCommand}" CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
             </Border>
         </Grid>
     </ContentPage.Content>

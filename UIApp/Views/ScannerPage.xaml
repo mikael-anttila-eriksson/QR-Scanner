@@ -83,13 +83,13 @@
 
         <!-- Status text and Gallery button at bottom -->
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="0" BackgroundColor="#2a2a2a">
-            <Label 
+        <Label 
                 Grid.Column="0"
-                Text="{Binding StatusMessage}"
-                TextColor="#ffffff"
-                FontSize="14"
-                HorizontalTextAlignment="Center"
-                Padding="20,16"
+            Text="{Binding StatusMessage}"
+            TextColor="#ffffff"
+            FontSize="14"
+            HorizontalTextAlignment="Center"
+            Padding="20,16"
                 VerticalOptions="Center" />
             
             <!-- Gallery button -->
