@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="UIApp/UIApp.csproj" />
+  <Project Path="UIApp/UIApp.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
 </Solution>

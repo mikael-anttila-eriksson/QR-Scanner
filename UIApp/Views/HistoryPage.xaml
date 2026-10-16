@@ -15,16 +15,33 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <Grid Padding="12">
-            <!-- Empty state -->
+        <Grid RowDefinitions="Auto,*" Padding="12" RowSpacing="12">
+            <!-- Top Control Bar -->
+            <VerticalStackLayout Spacing="12">
+                <!-- Filter and Clear Row -->
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" HorizontalOptions="Fill">
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="Favorites only" VerticalOptions="Center" TextColor="#ccc" />
+                        <Switch IsToggled="{Binding ShowFavoritesOnly}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <Button Grid.Column="1" Text="Clear All" Command="{Binding ClearAllCommand}" BackgroundColor="#e53935" TextColor="#fff" Padding="12,8" CornerRadius="6" FontSize="13" />
+                </Grid>
             
-            <StackLayout IsVisible="{Binding IsEmpty}" HorizontalOptions="Center" VerticalOptions="Center">
-                <Label Text="No scans yet" HorizontalOptions="Center" TextColor="#888" />
+                <!-- Empty State -->
+                <StackLayout IsVisible="{Binding IsEmpty}" HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                    <Label Text="No scans yet" HorizontalOptions="Center" TextColor="#888" FontSize="16" FontAttributes="Bold" />
                 <Label Text="Open the Scanner tab to create new scans." HorizontalOptions="Center" TextColor="#666" FontSize="12" />
             </StackLayout>
+            </VerticalStackLayout>
 
-            <!-- History list -->
-            <CollectionView ItemsSource="{Binding Items}" IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}">
+            <!-- List Container with Border -->
+            <Border Grid.Row="1" 
+                    Stroke="#333" 
+                    StrokeThickness="1" 
+                    StrokeShape="RoundRectangle 10" 
+                    IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
+                    Padding="0">
+                <CollectionView ItemsSource="{Binding Items}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:ScanResult">
                         <SwipeView>
@@ -34,17 +51,21 @@
                                 </SwipeItems>
                             </SwipeView.RightItems>
 
-                            <Grid Padding="12">
+                                <Grid Padding="12" RowSpacing="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <StackLayout Grid.Column="0">
-                                    <Label Text="{Binding RawValue}" LineBreakMode="TailTruncation" TextColor="#fff" />
+                                        <Label Text="{Binding RawValue}" LineBreakMode="TailTruncation" TextColor="#fff" FontSize="14" />
                                 </StackLayout>
 
-                                <Label Grid.Column="1" Text="{Binding ScannedAt, Converter={StaticResource TimeAgoConverter}}" TextColor="#aaa" HorizontalOptions="End" VerticalOptions="Center" />
+                                    <!-- Favorite star -->
+                                    <Label Grid.Column="1" Text="★" TextColor="#FFD700" VerticalOptions="Center" IsVisible="{Binding IsFavorite}" Margin="8,0" />
+
+                                    <Label Grid.Column="2" Text="{Binding ScannedAt, Converter={StaticResource TimeAgoConverter}}" TextColor="#aaa" HorizontalOptions="End" VerticalOptions="Center" FontSize="12" />
 
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={x:Reference QRHistoryPage}, Path=BindingContext.ItemSelectedCommand}" CommandParameter="{Binding .}" />
@@ -54,6 +75,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            </Border>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

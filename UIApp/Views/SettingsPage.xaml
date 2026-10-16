@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:UIApp.ViewModels"
+    x:Class="UIApp.Views.SettingsPage"
+    x:DataType="vm:SettingsViewModel"
+    Title="Settings"
+    BackgroundColor="#1e1e1e">
+
+    <VerticalStackLayout Padding="16" Spacing="20">
+        <Label Text="Settings" TextColor="#fff" FontSize="20" FontAttributes="Bold" />
+
+        <HorizontalStackLayout VerticalOptions="Center" Spacing="12">
+            <Label Text="Sound on scan" TextColor="#ddd" VerticalOptions="Center" />
+            <Switch IsToggled="{Binding IsSoundEnabled}" HorizontalOptions="EndAndExpand" />
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout VerticalOptions="Center" Spacing="12">
+            <Label Text="Haptic feedback" TextColor="#ddd" VerticalOptions="Center" />
+            <Switch IsToggled="{Binding IsHapticEnabled}" HorizontalOptions="EndAndExpand" />
+        </HorizontalStackLayout>
+
+        <Label Text="Changes are saved automatically." TextColor="#777" FontSize="12" />
+    </VerticalStackLayout>
+</ContentPage>

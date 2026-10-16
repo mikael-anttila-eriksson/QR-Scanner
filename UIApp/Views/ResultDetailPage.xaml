@@ -63,6 +63,15 @@
                     Padding="12,8"
                     CornerRadius="6" />
 
+            <!-- Favorite button -->
+            <Button x:Name="FavoriteButton" Text="☆ Favorite"
+                    Command="{Binding ToggleFavoriteCommand}"
+                    BackgroundColor="#444444"
+                    TextColor="#ffffff"
+                    FontSize="14"
+                    Padding="12,8"
+                    CornerRadius="6" />
+
             <!-- Copy and Share Row -->
             <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
                 <Button Grid.Column="0"

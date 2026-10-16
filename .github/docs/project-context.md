@@ -17,104 +17,86 @@ does_not_contain:
 # Project Status
 
 ## Current Milestone
-MVP: Complete — dark-theme Android-only .NET MAUI app with live QR scanning, persistent SQLite history, result actions (Open/Copy/Share), and Shell-based navigation (Scanner/History tabs + ResultDetail route).
-
-Next milestone: Phase 2 — gallery scanning, torch/zoom, expanded result parsers, favorites, generator, and settings.
+Phase 2 feature work has progressed through implementation-plan item 8 (Settings). Phase 2 is not yet accepted: automated tests, CI, and full acceptance/manual verification remain.
 
 ## Current Sprint / Focus
-Phase 2 planning and stabilization: manual QA and bug fixes from MVP verification, dependency pinning and remediation, add CI and basic unit tests, then begin Phase 2 feature work.
+Complete implementation-plan items 9-11: add focused unit tests, establish CI, and verify the Phase 2 acceptance criteria on target devices. Resolve any functional gaps found during that verification.
 
 ## Recently Completed
-- AppShell + TabBar and routing for ResultDetail
-- Dark-theme enforcement at startup (Application.UserAppTheme = AppTheme.Dark)
-- ScanResult model and SqliteStorageService implemented and registered
-- Removed unnecessary interfaces for MVP simplicity
-- BaseViewModel and MVVM refactor using CommunityToolkit.Mvvm
-- ScannerPage XAML and event plumbing created; ScannerService added to centralize debounce and classification logic
-- ResultDetailPage and ViewModel (Open/Copy/Share) implemented and wired
-- HistoryPage (CollectionView, reverse-chronological list, tap-to-detail, swipe-to-delete) implemented and persisted
+- Added gallery image scanning, live-camera torch and pinch zoom.
+- Added WiFi, vCard, and calendar payload parsers and classification.
+- Added History favorites, favorites-only filter, and clear-all.
+- Added QR generation with a 512-character input limit and save/share actions.
+- Added persistent sound and haptic settings.
+- Expanded Shell tabs to Scanner, History, Generator, and Settings; retained ResultDetail as a routed page.
 
 # Current Decisions
 
 ## UI
-- Single dark theme enforced; keep UI minimal for MVP (Scanner, History, ResultDetail).
-- Use Shell TabBar for top-level navigation; ResultDetail is a registered route pushed via GoToAsync.
+- Keep the dark-only theme and existing Shell navigation while completing Phase 2 verification; see `architecture.md` for the current design.
 
 ## Persistence
-- Local persistence using sqlite-net-pcl with native bundle SQLitePCLRaw.bundle_green.
-- Call `SQLitePCL.Batteries_V2.Init()` in MauiProgram before DB access.
-- Persist ScanResult with fields: Id, RawValue, Type, ScannedAt, IsFavorite (default false to avoid future migration).
+- No persistence strategy change is planned for Phase 2. Current SQLite wiring and model are documented in `architecture.md`.
 
 ## Save Coalescing
-- Writes use SQLiteAsyncConnection; simple initialization+insert pattern used for MVP. No coalescing queue implemented beyond async usage.
+- No write-coalescing queue is implemented or planned for current scope; live camera duplicates are handled by the scan debounce.
 
 ## Testing
-- Move toward automated tests: add unit tests for ViewModels and storage as high priority for Phase 2.
+- No test project is configured yet. Add unit coverage for parsers, storage, favorites/filtering, and generator/settings behavior.
+- Manual verification remains for Android 14 (API 34) on a physical device and the Windows build. Camera and other device-dependent behavior will require manual testing.
 
 ## CI/CD
-- Introduce a minimal CI workflow (build + restore + targeted unit tests + dependency scan) as a Phase 2 priority.
+- No GitHub Actions workflow is configured yet. Add a minimal workflow for restore, build, tests, and dependency checks.
 
 ## Performance
-- Debounce set to 2000ms to prevent duplicate detections. Disable scanning when navigating away to reduce CPU/battery usage.
+- Live camera scanning uses a 2-second debounce and is disabled when ScannerPage disappears.
 
 # Current Work
 
-## In Progress / Stabilization
-- Manual verification on Android emulator/device: camera feed, barcode detection, debounce, navigation, persistence, and permission flows.
-- Address NuGet warnings and dependency advisories (sqlite-net-pcl resolution messages and SQLitePCLRaw advisory) — determine upgrade or mitigation strategy.
-- Decide and pin ZXing package version or confirm compatibility approach used in MVP (CameraBarcodeReaderView without a builder extension is validated).
-- Add CI workflow and initial unit tests for storage and ViewModels.
+## In Progress
+- Add the test project and CI workflow from implementation-plan items 9-10.
+- Run manual verification against all Phase 2 acceptance criteria on Android and check Windows build behavior.
 
-## Next Tasks (short-term)
-- Fix any runtime issues surfaced by manual QA and edge-case scans (empty/malformed payload handling).
-- Implement vulnerability remediation plan or acceptable-mitigation notes for SQLitePCLRaw.
-- Create CI workflow: restore, build, targeted unit tests, and dependabot or similar for dependency updates.
-- Add basic unit tests covering SqliteStorageService and HistoryViewModel behaviors.
+## Next Tasks
+- Implement tests for payload parsers, storage, HistoryViewModel, and generator/settings behavior.
+- Add a GitHub Actions workflow for restore, build, tests, and dependency checks.
+- Complete manual testing, including malformed/empty scan data, image decode, camera controls, persisted preferences, and generated QR scannability.
+- Confirm the remaining Phase 2 acceptance gaps before calling the milestone complete.
 
-## Planned Phase 2 Work
-- Static-image (gallery) scanning, torch/zoom, WiFi/vCard/calendar parsing, favorites in History, QR generator, and Settings.
-- Design and create ADRs for any architectural changes required by Phase 2 (e.g., adding interfaces, repository layer).
-
-## Blockers / Resolved
-- Resolved: ZXing builder extension confusion — implementation used CameraBarcodeReaderView directly and validated runtime behavior across tested package versions. If a future package exposes a preferred builder extension, revisit.
-- Open: Dependency advisory for SQLitePCLRaw.lib.e_sqlite3 requires review and either an upgrade or a documented mitigation.
 
 # Known Issues
 
 ## Bugs
-- NuGet warnings: sqlite-net-pcl resolution message and a vulnerability advisory for SQLitePCLRaw.lib.e_sqlite3. These require review and possible upgrades; tracked as a remediation task.
+- Resolve the planned type-specific actions for WiFi, vCard, and calendar values or explicitly defer that acceptance criterion.
+- Malformed/empty decode handling still needs test-vector coverage and verification.
+- Generator Save writes PNG files to app-private `FileSystem.AppDataDirectory`, so users cannot readily find them in the gallery or normal file browser.
+- Generator Save and Share regenerate from the current input rather than the content used for the displayed preview; editing input after generation can make the preview differ from the saved or shared image.
 
 ## Technical Debt
-- A few legacy calls surfaced that referenced Application.Current.MainPage or synchronous dialog patterns; they were converted during MVP refactor but require a quick pass to ensure no remaining obsolete usages.
-- Docs: keep the how-to/zxing guide updated with the tested ZXing package/version used for MVP.
+- App behavior has no automated test coverage yet.
 
 ## Limitations
-- MVP targets Android only. Windows/other targets build but camera controls are Android-specific and may be conditionally included in csproj.
+- Camera, gallery, torch, and zoom behavior still requires target-device verification.
 
 # Future Work
 
 ## Planned Features (Phase 2)
-- Static-image (gallery) scanning, torch/zoom, WiFi/vCard/calendar parsing, favorites in History, QR generator, and Settings.
+- Complete and verify Phase 2; feature work has reached Settings, but tests, CI, and acceptance validation remain.
 
 ## Nice-to-have Improvements
-- Expand automated tests (integration tests for navigation and scanning flows where feasible).
-- Add dependency vulnerability scanning and scheduled upgrades.
-- Improve relative-time formatting with a helper or small library.
+- Add integration coverage for navigation and scanning flows where practical.
+- Add scheduled dependency updates after the initial CI workflow is in place.
 
 ## Refactoring Candidates
-- Introduce a lightweight Scanner abstraction if additional scan sources are added.
-- Extract platform-specific helpers for settings deep-link and permission flows.
+- Revisit how structured parser data is carried from scanning into ResultDetail if type-specific actions are added.
 
 # Open Questions
 
-## Decisions Pending
-- How to remediate the SQLitePCLRaw advisory in production builds (upgrade or accept with mitigation).
-- Scope and cadence for Phase 2: balance rapid feature delivery vs. adding automated test coverage and CI.
-
 ## Research Topics
-- Best practice for navigating to Android app settings from MAUI reliably across Android API levels.
+- Reliable test strategy for MAUI-dependent behavior versus pure parser and ViewModel logic.
 
 # Notes
 
-- Implementation references: `.github/docs/plans/qr-scanner-mvp--implementation-plan.md`, `.github/docs/plans/qr-scanner-app-spec-mvp-phase2.md`, and `.github/docs/plans/how-to-use-zxing.net.maui.md`.
+- Implementation progress: `.github/docs/plans/phase2-implementation-plan.md` (feature work through item 8; items 9-11 and acceptance gaps remain).
+- Architecture details: `.github/docs/architecture.md`.
 - Keep project-context.md focused on short-lived, actionable items — long-term decisions belong in ADRs under `.github/docs/adr/`.

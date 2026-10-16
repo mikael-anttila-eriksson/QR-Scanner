@@ -91,5 +91,29 @@ namespace UIApp.ViewModels
                 await Shell.Current.DisplayAlertAsync("Error", $"Could not share: {ex.Message}", "OK");
             }
         }
+
+        [RelayCommand]
+        public async Task ToggleFavorite()
+        {
+            if (CurrentResult == null) return;
+
+            try
+            {
+                // Toggle and persist
+                CurrentResult.IsFavorite = !CurrentResult.IsFavorite;
+                await _storage.InitializeAsync();
+                await _storage.UpdateAsync(CurrentResult);
+
+                // Notify UI
+                OnPropertyChanged(nameof(CurrentResult));
+
+                var msg = CurrentResult.IsFavorite ? "Added to favorites" : "Removed from favorites";
+                await Shell.Current.DisplayAlertAsync("Favorite", msg, "OK");
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlertAsync("Error", $"Could not update favorite: {ex.Message}", "OK");
+            }
+        }
     }
 }
